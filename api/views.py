@@ -49,10 +49,10 @@ def getCoolestDistrict(request):
     for district, temp_data, avg_temp in zip(districts_data, temperatures, average_temperatures)
     ]
     coolest_district = sorted(result, key=lambda x: x['average_temperature_at_2pm'])
-    return Response({"Coolest Districts": coolest_district[:10]})
+    return Response(coolest_district[:10])
 
 @api_view(['GET'])
-def getTemperatureAt2PM(request):
+def getAllDistrictTemperatureAt2PM(request):
     districts_data = get_districts_data()
 
     latitude = [float(district['lat']) for district in districts_data]
@@ -64,8 +64,6 @@ def getTemperatureAt2PM(request):
     api_request = f"{endpoint}?{url_parameters}"
 
     meteo_data = requests.get(api_request).json()
-    # temperatures = [data['hourly']['temperature_2m'][hour] for data in meteo_data]
-    # result = [{"district": district['name'], "temperatures_at_2pm": temperatures} for district in districts_data]
     temperatures = [
         [data['hourly']['temperature_2m'][hour + 24 * day] for day in range(7)]
         for data in meteo_data
@@ -75,3 +73,21 @@ def getTemperatureAt2PM(request):
         for district, temp_data in zip(districts_data, temperatures)
     ]
     return Response({"temperatures": result})
+
+@api_view(['POST'])
+def getTemperatureAt2PM(request):
+    # https://open-meteo.com/en/docs#latitude=23.7104&longitude=90.4074&hourly=temperature_2m&forecast_days=1&start_date=2024-01-06&end_date=2024-01-06&time_mode=time_interval
+    # {"latitude": 23.7104, "longitude": 90.4074, "start_date": "2024-01-07", "end_date": "2024-01-07", "hour": 14}
+    latitude = request.data.get('latitude')
+    longitude = request.data.get('longitude')
+    start_date = request.data.get('start_date')
+    end_date = request.data.get('end_date')
+    hour = request.data.get('hour')
+
+    endpoint = "https://api.open-meteo.com/v1/forecast"
+    api_request = f"{endpoint}?latitude={latitude}&longitude={longitude}&hourly=temperature_2m&start_date={start_date}&end_date={end_date}"
+    meteo_data = requests.get(api_request).json()
+    temp = meteo_data['hourly']['temperature_2m'][hour]
+    print(meteo_data)
+
+    return Response(temp)
