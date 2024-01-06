@@ -75,7 +75,7 @@ def getAllDistrictTemperatureAt2PM(request):
     return Response({"temperatures": result})
 
 @api_view(['POST'])
-def getTemperatureAt2PM(request):
+def getOnDateTemperatureAt2PM(request):
     # https://open-meteo.com/en/docs#latitude=23.7104&longitude=90.4074&hourly=temperature_2m&forecast_days=1&start_date=2024-01-06&end_date=2024-01-06&time_mode=time_interval
     # {"latitude": 23.7104, "longitude": 90.4074, "start_date": "2024-01-07", "end_date": "2024-01-07", "hour": 14}
     latitude = request.data.get('latitude')
@@ -91,3 +91,31 @@ def getTemperatureAt2PM(request):
     print(meteo_data)
 
     return Response(temp)
+
+def getTemperatureAt2PM(latitude, longitude, start_date, end_date, hour):
+    endpoint = "https://api.open-meteo.com/v1/forecast"
+    api_request = f"{endpoint}?latitude={latitude}&longitude={longitude}&hourly=temperature_2m&start_date={start_date}&end_date={end_date}"
+    meteo_data = requests.get(api_request).json()
+    temp = meteo_data['hourly']['temperature_2m'][hour]
+    return temp
+
+@api_view(['POST'])
+def travelRecommendation(request):
+    # {"departure_latitude": 23.7104, "departure_longitude": 90.4074, "destination_latitude": 24.3745, "destination_longitude": 88.6042, "travelling_date": "2024-01-07"}
+    
+    departure_latitude = request.data.get('departure_latitude')
+    departure_longitude = request.data.get('departure_longitude')
+    destination_latitude = request.data.get('destination_latitude')
+    destination_longitude = request.data.get('destination_longitude')
+    travelling_date = request.data.get('travelling_date')
+    hour = 14
+    recommended = False
+    
+    departureTemperature = getTemperatureAt2PM( departure_latitude, departure_longitude, travelling_date, travelling_date, hour )
+    travellingTemperature = getTemperatureAt2PM(destination_latitude, destination_longitude, travelling_date, travelling_date, hour)
+    if (departureTemperature>travellingTemperature):
+        recommended = True
+    else:
+        recommended = False
+
+    return Response ({"departureTemperature": departureTemperature, "travellingTemperature": travellingTemperature, "Recommended: ": recommended})
