@@ -1,5 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework import status
 from appbase.models import District
 from .serializers import DistrictSerializer
 import requests
@@ -26,7 +27,7 @@ def getCoolestDistrict(request):
     try:
         districts_data = get_districts_data()
         if not districts_data:
-                return Response({"error": "No district data available."}, status=400)
+                return Response({"error": "No district data available."}, status=status.HTTP_400_BAD_REQUEST)
 
         latitude = [float(district['lat']) for district in districts_data]
         longitude = [float(district['long']) for district in districts_data]
@@ -57,7 +58,7 @@ def getCoolestDistrict(request):
         return Response(coolest_district)
     except Exception as ex:
         print(ex)
-        return Response({"error": "Internal Server Error"}, status=500)
+        return Response({"error": "Internal Server Error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['GET'])
 def getAllDistrictTemperatureAt2PM(request):
@@ -101,29 +102,44 @@ def getOnDateTemperatureAt2PM(request):
     return Response(temp)
 
 def getTemperatureAt2PM(latitude, longitude, start_date, end_date, hour):
-    endpoint = "https://api.open-meteo.com/v1/forecast"
-    api_request = f"{endpoint}?latitude={latitude}&longitude={longitude}&hourly=temperature_2m&start_date={start_date}&end_date={end_date}"
-    meteo_data = requests.get(api_request).json()
-    temp = meteo_data['hourly']['temperature_2m'][hour]
-    return temp
+    try:
+        endpoint = "https://api.open-meteo.com/v1/forecast"
+        api_request = f"{endpoint}?latitude={latitude}&longitude={longitude}&hourly=temperature_2m&start_date={start_date}&end_date={end_date}"
+        meteo_data = requests.get(api_request).json()
+        temp = meteo_data['hourly']['temperature_2m'][hour]
+        return temp
+    except (requests.RequestException, KeyError, IndexError) as e:
+        print(e)
+        return None
 
 @api_view(['POST'])
 def travelRecommendation(request):
-    # {"departure_latitude": 23.7104, "departure_longitude": 90.4074, "destination_latitude": 24.3745, "destination_longitude": 88.6042, "travelling_date": "2024-01-07"}
-    
-    departure_latitude = request.data.get('departure_latitude')
-    departure_longitude = request.data.get('departure_longitude')
-    destination_latitude = request.data.get('destination_latitude')
-    destination_longitude = request.data.get('destination_longitude')
-    travelling_date = request.data.get('travelling_date')
-    hour = 14
-    recommended = False
-    
-    departureTemperature = getTemperatureAt2PM( departure_latitude, departure_longitude, travelling_date, travelling_date, hour )
-    travellingTemperature = getTemperatureAt2PM(destination_latitude, destination_longitude, travelling_date, travelling_date, hour)
-    if (departureTemperature>travellingTemperature):
-        recommended = True
-    else:
+    try:
+        # {"departure_latitude": 23.7104, "departure_longitude": 90.4074, "destination_latitude": 24.3745, "destination_longitude": 88.6042, "travelling_date": "2024-01-07"}
+        
+        departure_latitude = request.data.get('departure_latitude')
+        departure_longitude = request.data.get('departure_longitude')
+        destination_latitude = request.data.get('destination_latitude')
+        destination_longitude = request.data.get('destination_longitude')
+        travelling_date = request.data.get('travelling_date')
+        hour = 14
         recommended = False
 
-    return Response ({"departureTemperature": departureTemperature, "travellingTemperature": travellingTemperature, "Recommended: ": recommended})
+        if None in [departure_latitude, departure_longitude, destination_latitude, destination_longitude, travelling_date]:
+                return Response({"error": "Incomplete input data."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        departureTemperature = getTemperatureAt2PM(departure_latitude, departure_longitude, travelling_date, travelling_date, hour)
+        travellingTemperature = getTemperatureAt2PM(destination_latitude, destination_longitude, travelling_date, travelling_date, hour)
+
+        if departureTemperature is not None and travellingTemperature is not None:
+            recommended = departureTemperature > travellingTemperature
+            return Response({
+                "departureTemperature": departureTemperature,
+                "travellingTemperature": travellingTemperature,
+                "Recommended": recommended
+            })
+        else:
+            return Response({"error": "Error fetching temperature data."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    except Exception as e:
+        print(e)
+        return Response({"error": "Internal Server Error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
