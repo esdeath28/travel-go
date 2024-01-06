@@ -1,0 +1,74 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+    background-color: #f0f0f0;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.title {
+    padding: 16px;
+    font-size: 32px;
+}
+
+.district-card {
+    flex: 1 0 calc(20% - 64px);
+    margin: 16px;
+    padding: 16px;
+    height: auto;
+    border-radius: 8px;
+    border-bottom: 4px solid #dfdfdf;
+    background-color: #FFFFFF;
+    box-shadow: 3 3 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    position: relative;
+}
+
+.district-title,
+.district-location,
+.district-temperature {
+    top: 0;
+    left: 0;
+    text-align: left;
+}
+
+.district-title p {
+    font-size: 16px;
+    margin: 0;
+}
+
+.district-location p {
+    font-size: 12px;
+    margin: 0;
+}
+
+.district-temperature {
+    text-align: right;
+}
+
+.district-temperature p {
+    font-size: 46px;
+    margin: 0;
+}
+
+@media (max-width: 1200px) {
+    .district-card {
+        flex: 1 0 calc(33% - 64px);
+    }
+}
+
+@media (max-width: 600px) {
+    .district-card {
+        flex: 1 0 calc(50% - 64px);
+    }
+}
+
+@media (max-width: 300px) {
+    .district-card {
+        flex: 1 0 calc(100% - 64px);
+    }
+}

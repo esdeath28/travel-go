@@ -39,10 +39,12 @@ def getCoolestDistrict(request):
         [data['hourly']['temperature_2m'][hour + 24 * day] for day in range(7)]
         for data in meteo_data
     ]
-    average_temperatures = [sum(temp_list) / len(temp_list) for temp_list in temperatures]
+    average_temperatures = [round(sum(temp_list) / len(temp_list), 1) for temp_list in temperatures]
     result = [
     {
         "district": district['name'],
+        "latitude": district['lat'],
+        "longitude": district['long'],
         "temperatures_at_2pm": temp_data,
         "average_temperature_at_2pm": avg_temp
     }

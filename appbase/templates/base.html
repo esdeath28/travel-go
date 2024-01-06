@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Go</title>
+    <link rel="stylesheet" href="../../static/styles.css">
+</head>
+
+<body>
+    <section class="travel-recommend">
+
+    </section>
+    <section class="coolest-districts">
+        <div class="title container">
+            Top 10 Coolest Districts
+        </div>
+        <div class="container">
+            {% for district_data in api_data %}
+            <div class="district-card">
+                <div class="district-title">
+                    <p>{{ district_data.district }}</p>
+                </div>
+                <div class="district-location">
+                    <p>Latitude: {{ district_data.latitude }},</p>
+                    <p>Longitude: {{ district_data.longitude }}</p>
+                </div>
+                <div class="district-temperature">
+                    <p>{{ district_data.average_temperature_at_2pm }}°C</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    </section>
+
+</body>
+
+</html>
+
+
+
+<!-- <div class="district-card">
+    <div class="district-title">
+        <p>Dhaka</p>
+    </div>
+    <div class="district-location">
+        <p>Latitude: 23.5,</p>
+        <p>Longitude: 90.5</p>
+    </div>
+    <div class="district-temperature">
+        <p>18°C</p>
+    </div>
+</div> -->
