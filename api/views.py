@@ -23,35 +23,41 @@ def addDistrict(request):
 
 @api_view(['GET'])
 def getCoolestDistrict(request):
-    districts_data = get_districts_data()
+    try:
+        districts_data = get_districts_data()
+        if not districts_data:
+                return Response({"error": "No district data available."}, status=400)
 
-    latitude = [float(district['lat']) for district in districts_data]
-    longitude = [float(district['long']) for district in districts_data]
-    hour = 14
+        latitude = [float(district['lat']) for district in districts_data]
+        longitude = [float(district['long']) for district in districts_data]
+        hour = 14
 
-    endpoint = "https://api.open-meteo.com/v1/forecast"
-    url_parameters = "&".join([f"latitude={lat}&longitude={lon}&hourly=temperature_2m" for lat, lon in zip(latitude, longitude)])
-    api_request = f"{endpoint}?{url_parameters}"
+        endpoint = "https://api.open-meteo.com/v1/forecast"
+        url_parameters = "&".join([f"latitude={lat}&longitude={lon}&hourly=temperature_2m" for lat, lon in zip(latitude, longitude)])
+        api_request = f"{endpoint}?{url_parameters}"
 
-    meteo_data = requests.get(api_request).json()
+        meteo_data = requests.get(api_request).json()
 
-    temperatures = [
-        [data['hourly']['temperature_2m'][hour + 24 * day] for day in range(7)]
-        for data in meteo_data
-    ]
-    average_temperatures = [round(sum(temp_list) / len(temp_list), 1) for temp_list in temperatures]
-    result = [
-    {
-        "district": district['name'],
-        "latitude": district['lat'],
-        "longitude": district['long'],
-        "temperatures_at_2pm": temp_data,
-        "average_temperature_at_2pm": avg_temp
-    }
-    for district, temp_data, avg_temp in zip(districts_data, temperatures, average_temperatures)
-    ]
-    coolest_district = sorted(result, key=lambda x: x['average_temperature_at_2pm'])
-    return Response(coolest_district[:10])
+        temperatures = [
+            [data['hourly']['temperature_2m'][hour + 24 * day] for day in range(7)]
+            for data in meteo_data
+        ]
+        average_temperatures = [round(sum(temp_list) / len(temp_list), 1) for temp_list in temperatures]
+        result = [
+        {
+            "district": district['name'],
+            "latitude": district['lat'],
+            "longitude": district['long'],
+            "temperatures_at_2pm": temp_data,
+            "average_temperature_at_2pm": avg_temp
+        }
+        for district, temp_data, avg_temp in zip(districts_data, temperatures, average_temperatures)
+        ]
+        coolest_district = sorted(result, key=lambda x: x['average_temperature_at_2pm'])[:10]
+        return Response(coolest_district)
+    except Exception as ex:
+        print(ex)
+        return Response({"error": "Internal Server Error"}, status=500)
 
 @api_view(['GET'])
 def getAllDistrictTemperatureAt2PM(request):
