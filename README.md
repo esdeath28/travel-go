@@ -30,8 +30,8 @@ Request Example
 ### Extra Features
 <p>Endpoint: /home/ </p>
 <p>takes you to an interactive ui where you can get an enhanced experience. This template is for testing purposes and provides a user-friendly interface to interact with the APIs.</p>
-<p>-- Beware as you hit home page it immedietly send request to the Coolest Districts API making several calls and as your daily requests limits are suggested to remain below 10,000 calls you might not want to refresh the page too often.</p>
-Usage:
+<p>Beware as you hit home page it immedietly send request to the Coolest Districts API making several calls and as your daily requests limits are suggested to remain below 10,000 calls you might not want to refresh the page too often.</p>
+### Usage:
 1. Fill in the Form:
    - Input your departure and destination coordinates along with the travel date.
 3. Submit the Form:
