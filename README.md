@@ -10,15 +10,15 @@ This README file provides instructions on setting up a Django project 'Travel Go
 
 ### Travel Decision API:
 <p>Description: Compares the temperature at 2 pm for the given origin and destination on the specified date. Returns a response advising whether it's suitable to travel.</p>
-<p>Endpoint: /travelRecommendation/</p>
+<p>Endpoint: /travelRecommendation/ </p>
 <p>Method: POST</p>
-<p>Parameters</p>
+Parameters
 - `departure_latitude` (float): The latitude of the user's current location.
 - `departure_longitude` (float): The longitude of the user's current location.
 - `destination_latitude` (float): The latitude of the desired travel destination.
 - `destination_longitude` (float): The longitude of the desired travel destination.
 - `travelling_date` (string): The date of travel (format: YYYY-MM-DD).
-<p>Request Example</p>
+Request Example
 {
   "departure_latitude": 23.7104,
   "departure_longitude": 90.4074,
@@ -28,8 +28,9 @@ This README file provides instructions on setting up a Django project 'Travel Go
 }
 
 ### Extra Features
-Endpoint: /home/ takes you to an interactive ui where you can get an enhanced experience. This template is for testing purposes and provides a user-friendly interface to interact with the APIs.
--- Beware as you hit home page it immedietly send request to the Coolest Districts API making several calls and as your daily requests limits are suggested to remain below 10,000 calls you might not want to refresh the page too often.
+<p>Endpoint: /home/ </p>
+<p>takes you to an interactive ui where you can get an enhanced experience. This template is for testing purposes and provides a user-friendly interface to interact with the APIs.</p>
+<p>-- Beware as you hit home page it immedietly send request to the Coolest Districts API making several calls and as your daily requests limits are suggested to remain below 10,000 calls you might not want to refresh the page too often.</p>
 Usage:
 1. Fill in the Form:
    - Input your departure and destination coordinates along with the travel date.
