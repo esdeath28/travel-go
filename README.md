@@ -4,9 +4,9 @@ This README file provides instructions on setting up a Django project 'Travel Go
 
 ### Features
 ### Coolest Districts API:
-Description: Fetches the list of the coolest 10 districts based on the average temperature at 2 pm for the next 7 days.
-Endpoint: /getCoolestDistricts/
-Method: GET
+<p>Description: Fetches the list of the coolest 10 districts based on the average temperature at 2 pm for the next 7 days.</p>
+<p>Endpoint: /getCoolestDistricts/</p>
+<p>Method: GET</p>
 
 ### Travel Decision API:
 Description: Compares the temperature at 2 pm for the given origin and destination on the specified date. Returns a response advising whether it's suitable to travel.
