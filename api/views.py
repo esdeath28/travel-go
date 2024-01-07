@@ -7,6 +7,7 @@ from .serializers import DistrictSerializer
 import requests
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
+import os
 
 def get_districts_data():
     districts = District.objects.all()
@@ -24,12 +25,15 @@ def addDistrict(request):
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
-
-def get_temperatures(latitude, longitude):
+    
+def get_temperatures(chunk):
     try:
+        latitude_parameters_chunk = ",".join(map(lambda district: str(district['lat']), chunk))
+        longitude_parameters_chunk = ",".join(map(lambda district: str(district['long']), chunk))
+
         hour = 14
         endpoint = "https://api.open-meteo.com/v1/forecast"
-        url_parameters = f"latitude={latitude}&longitude={longitude}&hourly=temperature_2m"
+        url_parameters = f"latitude={latitude_parameters_chunk}&longitude={longitude_parameters_chunk}&hourly=temperature_2m"
         api_request = f"{endpoint}?{url_parameters}"
         meteo_data = requests.get(api_request).json()
 
@@ -42,12 +46,6 @@ def get_temperatures(latitude, longitude):
     except Exception as e:
         print(f"Error in get_temperatures: {e}")
         return []
-    
-def get_temperatures_chunk(chunk):
-    latitude_parameters_chunk = ",".join(map(lambda district: str(district['lat']), chunk))
-    longitude_parameters_chunk = ",".join(map(lambda district: str(district['long']), chunk))
-    temperatures_list = get_temperatures(latitude_parameters_chunk, longitude_parameters_chunk)
-    return temperatures_list
     
 @api_view(['GET'])
 def getCoolestDistricts(request):
@@ -80,8 +78,8 @@ def getCoolestDistricts(request):
         if len(districts_data) % num_chunks != 0:
             chunks[-1].extend(districts_data[chunk_len * num_chunks:])
 
-        with ThreadPoolExecutor(max_workers=num_chunks) as executor:
-            temperatures_lists = list(executor.map(get_temperatures_chunk, chunks))
+        with ThreadPoolExecutor(max_workers=os.cpu_count()//2) as executor:
+            temperatures_lists = list(executor.map(get_temperatures, chunks))
         
         temperatures = [temp for sublist in temperatures_lists for temp in sublist]
 
@@ -185,6 +183,12 @@ def travelRecommendationOld(request):
         print(e)
         return Response({"error": "Internal Server Error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
+def is_valid_lat_long(latitude, longitude):
+    try:
+        return -90 <= latitude <= 90 and -180 <= longitude <= 180
+    except ValueError:
+        return False
+    
 @api_view(['POST'])
 def travelRecommendation(request):
     try:
@@ -202,6 +206,9 @@ def travelRecommendation(request):
             return Response({"error": "Incomplete input data."}, status=status.HTTP_400_BAD_REQUEST)
         if datetime.strptime(travelling_date, "%Y-%m-%d").date() < datetime.now().date():
             return Response({"error": "Travelling date cannot be backdated from today."}, status=status.HTTP_400_BAD_REQUEST)
+        if not (is_valid_lat_long(departure_latitude, departure_longitude) and is_valid_lat_long(destination_latitude, destination_longitude)):
+            return Response({"error": "Invalid latitude or longitude data."}, status=status.HTTP_400_BAD_REQUEST)
+
 
         endpoint = "https://api.open-meteo.com/v1/forecast"
         api_request = f"{endpoint}?latitude={departure_latitude},{destination_latitude}&longitude={departure_longitude},{destination_longitude}&hourly=temperature_2m&start_date={travelling_date}&end_date={travelling_date}"
