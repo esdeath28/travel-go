@@ -8,6 +8,7 @@ import requests
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
 import os
+import json
 
 def get_districts_data():
     districts = District.objects.all()
@@ -52,7 +53,11 @@ def getCoolestDistricts(request):
     try:
         districts_data = cache.get('districts_data')
         if districts_data is None:
-            districts_data = get_districts_data()
+            try:
+                with open('static/districts_data.json', 'r') as json_file:
+                        districts_data = json.load(json_file)
+            except FileNotFoundError:
+                return Response({"error": "District data file not found. Make sure the file exists at the specified location"}, status=status.HTTP_400_BAD_REQUEST)
             cache.set('districts_data', districts_data, timeout=15778463)
 
         if not districts_data:
