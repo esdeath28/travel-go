@@ -25,6 +25,30 @@ def addDistrict(request):
         serializer.save()
     return Response(serializer.data)
 
+def get_temperatures(latitude, longitude):
+    try:
+        hour = 14
+        endpoint = "https://api.open-meteo.com/v1/forecast"
+        url_parameters = f"latitude={latitude}&longitude={longitude}&hourly=temperature_2m"
+        api_request = f"{endpoint}?{url_parameters}"
+        meteo_data = requests.get(api_request).json()
+
+        temperatures = [
+            [data['hourly']['temperature_2m'][hour + 24 * day] for day in range(7)]
+            for data in meteo_data
+        ]
+
+        return temperatures
+    except Exception as e:
+        print(f"Error in get_temperatures: {e}")
+        return []
+    
+def get_temperatures_chunk(chunk):
+    latitude_parameters_chunk = ",".join(map(lambda district: str(district['lat']), chunk))
+    longitude_parameters_chunk = ",".join(map(lambda district: str(district['long']), chunk))
+    temperatures_list = get_temperatures(latitude_parameters_chunk, longitude_parameters_chunk)
+    return temperatures_list
+    
 @api_view(['GET'])
 def getCoolestDistricts(request):
     try:
@@ -36,19 +60,31 @@ def getCoolestDistricts(request):
         if not districts_data:
                 return Response({"error": "No district data available."}, status=status.HTTP_400_BAD_REQUEST)
 
-        latitude_parameters = ",".join(map(lambda district: str(district['lat']), districts_data))
-        longitude_parameters = ",".join(map(lambda district: str(district['long']), districts_data))
-        hour = 14
+        # latitude_parameters = ",".join(map(lambda district: str(district['lat']), districts_data))
+        # longitude_parameters = ",".join(map(lambda district: str(district['long']), districts_data))
+        # hour = 14
 
-        endpoint = "https://api.open-meteo.com/v1/forecast"
-        url_parameters = f"latitude={latitude_parameters}&longitude={longitude_parameters}&hourly=temperature_2m"
-        api_request = f"{endpoint}?{url_parameters}"
-        meteo_data = requests.get(api_request).json()
+        # endpoint = "https://api.open-meteo.com/v1/forecast"
+        # url_parameters = f"latitude={latitude_parameters}&longitude={longitude_parameters}&hourly=temperature_2m"
+        # api_request = f"{endpoint}?{url_parameters}"
+        # meteo_data = requests.get(api_request).json()
 
-        temperatures = [
-            [data['hourly']['temperature_2m'][hour + 24 * day] for day in range(7)]
-            for data in meteo_data
-        ]
+        # temperatures = [
+        #     [data['hourly']['temperature_2m'][hour + 24 * day] for day in range(7)]
+        #     for data in meteo_data
+        # ]
+        # print(districts_data)
+        num_chunks = 4
+        chunk_len = len(districts_data) // num_chunks
+        chunks = [districts_data[i:i + chunk_len] for i in range(0, len(districts_data), chunk_len)]
+        if len(districts_data) % num_chunks != 0:
+            chunks[-1].extend(districts_data[chunk_len * num_chunks:])
+
+        with ThreadPoolExecutor(max_workers=num_chunks) as executor:
+            temperatures_lists = list(executor.map(get_temperatures_chunk, chunks))
+        
+        temperatures = [temp for sublist in temperatures_lists for temp in sublist]
+
         average_temperatures = [round(sum(temp_list) / len(temp_list), 1) for temp_list in temperatures]
         result = [
         {
