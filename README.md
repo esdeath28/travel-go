@@ -9,23 +9,23 @@ This README file provides instructions on setting up a Django project 'Travel Go
 <p>Method: GET</p>
 
 ### Travel Decision API:
-Description: Compares the temperature at 2 pm for the given origin and destination on the specified date. Returns a response advising whether it's suitable to travel.
-Endpoint: /travelRecommendation/
-Method: POST
-Parameters
+<p>Description: Compares the temperature at 2 pm for the given origin and destination on the specified date. Returns a response advising whether it's suitable to travel.</p>
+<p>Endpoint: /travelRecommendation/</p>
+<p>Method: POST</p>
+<p>Parameters</p>
 - `departure_latitude` (float): The latitude of the user's current location.
 - `departure_longitude` (float): The longitude of the user's current location.
 - `destination_latitude` (float): The latitude of the desired travel destination.
 - `destination_longitude` (float): The longitude of the desired travel destination.
 - `travelling_date` (string): The date of travel (format: YYYY-MM-DD).
-Request Example
-{
+<p>Request Example</p>
+<p>{
   "departure_latitude": 23.7104,
   "departure_longitude": 90.4074,
   "destination_latitude": 24.3745,
   "destination_longitude": 88.6042,
   "travelling_date": "2024-01-10"
-}
+}</p>
 
 ### Extra Features
 Endpoint: /home/ takes you to an interactive ui where you can get an enhanced experience. This template is for testing purposes and provides a user-friendly interface to interact with the APIs.
