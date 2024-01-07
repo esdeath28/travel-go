@@ -5,7 +5,8 @@ urlpatterns = [
     path('addDistrict', views.addDistrict),
     path('getDistricts', views.getDistricts),
     path('getAllDistrictTemperatureAt2PM', views.getAllDistrictTemperatureAt2PM),
-    path('getCoolestDistrict', views.getCoolestDistrict),
     path('getTemperatureAt2PM', views.getOnDateTemperatureAt2PM),
+
+    path('getCoolestDistricts', views.getCoolestDistricts),
     path('travelRecommendation', views.travelRecommendation),
 ]

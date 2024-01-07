@@ -22,7 +22,7 @@
             Coolest Districts This Upcoming Week
         </div>
         <div class="container">
-            <!-- {% for district_data in api_data %}
+            {% for district_data in api_data %}
             <div class="district-card">
                 <div class="district-title">
                     <p>{{ district_data.district }}</p>
@@ -35,19 +35,7 @@
                     <p>{{ district_data.average_temperature_at_2pm }}°C</p>
                 </div>
             </div>
-            {% endfor %} -->
-            <div class="district-card">
-                <div class="district-title">
-                    <p>Dhaka</p>
-                </div>
-                <div class="district-location">
-                    <p>Latitude: 23.5,</p>
-                    <p>Longitude: 90.5</p>
-                </div>
-                <div class="district-temperature">
-                    <p>18°C</p>
-                </div>
-            </div> 
+            {% endfor %}
         </div>
 
     </section>
