@@ -1,4 +1,4 @@
-<title>Travel Go Setup Readme</title>
+<h1>Travel Go Setup Readme</h1>
 
 This README file provides instructions on setting up a Django project 'Travel Go'. The APIs are designed to help users discover the coolest districts based on the average temperature at 2 pm for the next 7 days as well as assisting users in making informed decisions about travel plans by comparing the temperatures of two locations on a specific date and advising whether it's a suitable day for travel.
 
@@ -19,7 +19,6 @@ Parameters
 - `destination_longitude` (float): The longitude of the desired travel destination.
 - `travelling_date` (string): The date of travel (format: YYYY-MM-DD).
 Request Example
-```json
 {
   "departure_latitude": 23.7104,
   "departure_longitude": 90.4074,
