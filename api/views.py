@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
@@ -5,6 +6,7 @@ from appbase.models import District
 from .serializers import DistrictSerializer
 import requests
 from datetime import datetime
+from concurrent.futures import ThreadPoolExecutor
 
 def get_districts_data():
     districts = District.objects.all()
@@ -26,7 +28,11 @@ def addDistrict(request):
 @api_view(['GET'])
 def getCoolestDistricts(request):
     try:
-        districts_data = get_districts_data()
+        districts_data = cache.get('districts_data')
+        if districts_data is None:
+            districts_data = get_districts_data()
+            cache.set('districts_data', districts_data, timeout=15778463)
+
         if not districts_data:
                 return Response({"error": "No district data available."}, status=status.HTTP_400_BAD_REQUEST)
 
