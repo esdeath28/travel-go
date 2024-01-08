@@ -91,3 +91,20 @@ requests==2.31.0
 url-normalize==1.4.3
 └── six [required: Any, installed: 1.16.0]
 ```
+
+## API Response Time
+
+### Successful Response Time
+For the **Coolest Districts API** the best response time I got is `530ms`.
+![alt text.](/postman/api_01_530.png "image1.")
+![alt text.](/postman/api_01_554.png "image2.")
+
+And for the **Travel Decision API** the best response time I got is `486ms`.
+![alt text.](/postman/api_02_486.png "image3.")
+![alt text.](/postman/api_02_490.png "image4.")
+
+### Postman Collections and Environment
+I have provided Postman collections and environment for easy API testing. Use the following files to import them into your Postman workspace:
+* Postman Collections
+* Postman Environment
+

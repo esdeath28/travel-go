@@ -1,0 +1,53 @@
+{
+	"info": {
+		"_postman_id": "4ecc32e0-842a-49e5-afc2-6fa8589c597b",
+		"name": "Travel Go",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11124212"
+	},
+	"item": [
+		{
+			"name": "get 10 coolest districts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/getCoolestDistricts",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"getCoolestDistricts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "travel decision make",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"departure_latitude\": 23.7104,\r\n    \"departure_longitude\": 90.4074,\r\n    \"destination_latitude\": 24.3745,\r\n    \"destination_longitude\": 88.6042,\r\n    \"travelling_date\": \"2024-01-07\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/travelRecommendation",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"travelRecommendation"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
