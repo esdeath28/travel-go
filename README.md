@@ -30,12 +30,6 @@ To decide weather the destined place is suitable to cool you down or not make a 
 }
 ```
 
-### Extra Features
-Thought it'd look cooler if there was some kind of interface to interact with the API. There's always a smol happiness in seeing your work in a live environment. Anyway, the endpoint takes you to an interactive ui where you get interface to interact with the APIs. Currently, only the Coolest Districts API is integrated. <br>
-**Endpoint** &nbsp;&nbsp;&nbsp;&nbsp;: &nbsp;&nbsp;http://127.0.0.1:8000/home/ <br>
-
-Note: Beware as you hit home page it immedietly send request to the Coolest Districts API making several calls and as your daily requests limit are suggested to remain below 10,000 calls you might not want to refresh the page too often.
-
 ## Setup Guide
 You can follow these instructions to set up the project in your local machine:
 
@@ -95,10 +89,8 @@ url-normalize==1.4.3
 ## API Response Time
 
 ### Successful Response Time
-For the **Coolest Districts API** the best response time I got is `530ms`.
+For the **Coolest Districts API** the best response time I got is `530ms`. And for the **Travel Decision API** the best response time I got is `486ms`.
 ![alt text.](/postman/api_01_530.png "image1.")
-
-And for the **Travel Decision API** the best response time I got is `486ms`.
 ![alt text.](/postman/api_02_486.png "image3.")
 
 ### Postman Collections and Environment
@@ -106,3 +98,9 @@ I have provided Postman collections and environment for easy API testing. Use th
 * Postman Collections
 * Postman Environment
 
+### Extra Features
+Thought it'd look cooler if there was some kind of interface to interact with the API. There's always a smol happiness in seeing your work in a live environment. Anyway, the endpoint takes you can see the list of 10 coolest districts as only the Coolest Districts API is integrated. Hope I'll do the same for the Travel Decision API too. :D <br>
+**Endpoint** &nbsp;&nbsp;&nbsp;&nbsp;: &nbsp;&nbsp;http://127.0.0.1:8000/home/ <br><br>
+![alt text.](/postman/live.png "image1.")
+
+Note: Beware as you hit home page it immedietly send request to the Coolest Districts API making several calls and as your daily requests limit are suggested to remain below 10,000 calls you might not want to refresh the page too often.
