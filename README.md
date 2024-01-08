@@ -62,7 +62,7 @@ You can follow these instructions to set up the project in your local machine:
     ```
     python manage.py runserver
     ```
-**Note**: You can take a look into my dependency tree for more clarifications in case of dependencies installation error.
+**Remarks**: You can take a look into my dependency tree for more clarifications in case of dependencies installation error.
 
 ```
 cattrs==23.2.3
@@ -93,6 +93,9 @@ For the **Coolest Districts API** the best response time I got is `530ms`. And f
 ![alt text.](/postman/api_01_530.png "image1.")
 ![alt text.](/postman/api_02_486.png "image3.")
 
+**N.B.** The response time varies over time. This variability can be influenced by factors such as server load, network conditions, and other external dependencies.  Observations indicate that the least response times are typically captured after midnight.<br>
+To reduce Resource Overhead, Scalability, Speed and Efficiency I tried to use less dependencies.
+
 ### Postman Collections and Environment
 I have provided Postman collections and environment for easy API testing. Use the following files to import them into your Postman workspace:
 * Postman Collections
@@ -103,4 +106,4 @@ Thought it'd look cooler if there was some kind of interface to interact with th
 **Endpoint** &nbsp;&nbsp;&nbsp;&nbsp;: &nbsp;&nbsp;http://127.0.0.1:8000/home/ <br><br>
 ![alt text.](/postman/live.png "image1.")
 
-Note: Beware as you hit home page it immedietly send request to the Coolest Districts API making several calls and as your daily requests limit are suggested to remain below 10,000 calls you might not want to refresh the page too often.
+**Note**: Beware as you hit home page it immedietly send request to the Coolest Districts API making several calls and as your daily requests limit are suggested to remain below 10,000 calls you might not want to refresh the page too often.
