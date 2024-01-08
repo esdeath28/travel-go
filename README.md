@@ -1,24 +1,26 @@
-<h1>Travel Go Setup Readme</h1>
+# Travel Go
 
-This README file provides instructions on setting up a Django project 'Travel Go'. The APIs are designed to help users discover the coolest districts based on the average temperature at 2 pm for the next 7 days as well as assisting users in making informed decisions about travel plans by comparing the temperatures of two locations on a specific date and advising whether it's a suitable day for travel.
-
-### Features
+My task involved developing two distinct APIs to enhance user experiences with weather-related insights. The first API aims to assist users in uncovering the coolest 10 districts, providing average temperature forecasts at 2 pm for the upcoming 7 days. The second API is designed to assist users in making well-informed travel decisions by comparing temperatures between two locations on a specified date and offering advice on the suitability of each destination for travel.
+## Description
 ### Coolest Districts API:
-<p>Description: Fetches the list of the coolest 10 districts based on the average temperature at 2 pm for the next 7 days.</p>
-<p>Endpoint: /getCoolestDistricts/</p>
-<p>Method: GET</p>
+To discover the coolest districts, make a `GET` request to the `/getCoolestDistricts` endpoint. The API will respond with a list of 10 coolest districts considering average temperature data for the next 7 days at 2 pm.<br><br>
+**Endpoint** &nbsp;&nbsp;&nbsp;&nbsp;: &nbsp;&nbsp;http://127.0.0.1:8000/getCoolestDistricts/<br>
+**Method** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: &nbsp;&nbsp;GET
 
 ### Travel Decision API:
-<p>Description: Compares the temperature at 2 pm for the given origin and destination on the specified date. Returns a response advising whether it's suitable to travel.</p>
-<p>Endpoint: /travelRecommendation/ </p>
-<p>Method: POST</p>
-Parameters
+To decide weather the destined place is suitable to cool you down or not make a `POST` request to `/travelRecommendation` endpoint. The API will compare the temperature at 2 pm for the given location and destination on the provided date and return a boolean response advising whether it's suitable to travel.<br><br>
+**Endpoint** &nbsp;&nbsp;&nbsp;&nbsp;: &nbsp;&nbsp;http://127.0.0.1:8000/travelRecommendation/<br>
+**Method** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: &nbsp;&nbsp;POST<br>
+### Parameters
 - `departure_latitude` (float): The latitude of the user's current location.
 - `departure_longitude` (float): The longitude of the user's current location.
 - `destination_latitude` (float): The latitude of the desired travel destination.
 - `destination_longitude` (float): The longitude of the desired travel destination.
 - `travelling_date` (string): The date of travel (format: YYYY-MM-DD).
-Request Example
+
+### Example
+
+```json
 {
   "departure_latitude": 23.7104,
   "departure_longitude": 90.4074,
@@ -26,17 +28,66 @@ Request Example
   "destination_longitude": 88.6042,
   "travelling_date": "2024-01-10"
 }
+```
 
 ### Extra Features
-<p>Endpoint: /home/ </p>
-<p>takes you to an interactive ui where you can get an enhanced experience. This template is for testing purposes and provides a user-friendly interface to interact with the APIs.</p>
-<p>Beware as you hit home page it immedietly send request to the Coolest Districts API making several calls and as your daily requests limits are suggested to remain below 10,000 calls you might not want to refresh the page too often.</p>
-### Usage:
-1. Fill in the Form:
-   - Input your departure and destination coordinates along with the travel date.
-3. Submit the Form:
-   - Click the submit button to send a request to the Travel Decision API.
-4. View Results:
-   - The website will display the API's response, including an advisory message about the travel suitability.
+Thought it'd look cooler if there was some kind of interface to interact with the API. There's always a smol happiness in seeing your work in a live environment. Anyway, the endpoint takes you to an interactive ui where you get interface to interact with the APIs. Currently, only the Coolest Districts API is integrated. <br>
+**Endpoint** &nbsp;&nbsp;&nbsp;&nbsp;: &nbsp;&nbsp;http://127.0.0.1:8000/home/ <br>
 
+Note: Beware as you hit home page it immedietly send request to the Coolest Districts API making several calls and as your daily requests limit are suggested to remain below 10,000 calls you might not want to refresh the page too often.
 
+## Setup Guide
+You can follow these instructions to set up the project in your local machine:
+
+1. #### Clone the Repository or down Zip file.
+    ```
+    git clone https://github.com/esdeath28/travel-go.git
+    ```
+2. #### Install pipenv environment
+    You need to set up a virtual environment for the project. It'll automatically manages project packages through the Pipfile file as you install or uninstall packages.<br>
+
+    ```
+    pip install pipenv
+    ```
+2. #### Navigate to Project Directory
+    ```
+    cd travel-go
+    ```
+3. #### Install dependencies in virtual environment 
+    ```
+    pipenv install --python 3.11
+    ```
+    ```
+    pipenv install requests
+    ```
+5. #### Activate Virtual Environment
+    ```
+    pipenv shell
+    ```
+6. #### Start the Development Server
+    ```
+    python manage.py runserver
+    ```
+**Note**: You can take a look into my dependency tree for more clarifications in case of dependencies installation error.
+
+```
+cattrs==23.2.3
+└── attrs [required: >=23.1.0, installed: 23.2.0]
+djangorestframework==3.14.0
+├── django [required: >=3.0, installed: 5.0.1]
+│   ├── asgiref [required: >=3.7.0,<4, installed: 3.7.2]
+│   ├── sqlparse [required: >=0.3.1, installed: 0.4.4]
+│   └── tzdata [required: Any, installed: 2023.4]
+└── pytz [required: Any, installed: 2023.3.post1]
+flatbuffers==23.5.26
+platformdirs==4.1.0
+python-dateutil==2.8.2
+└── six [required: >=1.5, installed: 1.16.0]
+requests==2.31.0
+├── certifi [required: >=2017.4.17, installed: 2023.11.17]
+├── charset-normalizer [required: >=2,<4, installed: 3.3.2]
+├── idna [required: >=2.5,<4, installed: 3.6]
+└── urllib3 [required: >=1.21.1,<3, installed: 2.1.0]
+url-normalize==1.4.3
+└── six [required: Any, installed: 1.16.0]
+```
