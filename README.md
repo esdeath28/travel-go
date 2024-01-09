@@ -102,7 +102,7 @@ I have provided Postman collections and environment for easy API testing. Use th
 * Postman Environment
 
 ### Extra Features
-Thought it'd look cooler if there was some kind of interface to interact with the API. There's always a smol happiness in seeing your work in a live environment. Anyway, the endpoint takes you can see the list of 10 coolest districts as only the Coolest Districts API is integrated. Hope I'll do the same for the Travel Decision API too. :D <br>
+Thought it'd look cooler if there was some kind of interface to interact with the API. There's always a small happiness in seeing your work in a live environment. Anyway, the endpoint takes you can see the list of 10 coolest districts as only the Coolest Districts API is integrated. Hope I'll do the same for the Travel Decision API too. :D <br>
 **Endpoint** &nbsp;&nbsp;&nbsp;&nbsp;: &nbsp;&nbsp;http://127.0.0.1:8000/home/ <br><br>
 ![alt text.](/postman/live.png "image1.")
 
