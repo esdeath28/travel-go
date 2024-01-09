@@ -2,10 +2,9 @@ from django.core.cache import cache
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
-from appbase.models import District
 from .serializers import DistrictSerializer
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 from concurrent.futures import ThreadPoolExecutor
 import os
 import json
@@ -97,6 +96,8 @@ def travelRecommendation(request):
             return Response({"error": "Incomplete input data."}, status=status.HTTP_400_BAD_REQUEST)
         if datetime.strptime(travelling_date, "%Y-%m-%d").date() < datetime.now().date():
             return Response({"error": "Travelling date cannot be backdated from today."}, status=status.HTTP_400_BAD_REQUEST)
+        if datetime.strptime(travelling_date, "%Y-%m-%d").date() > (datetime.now().date() + timedelta(days=14)):
+            return Response({"error": "You cannot input a date range longer than 14 days."}, status=status.HTTP_400_BAD_REQUEST)
         if not (is_valid_lat_long(departure_latitude, departure_longitude) and is_valid_lat_long(destination_latitude, destination_longitude)):
             return Response({"error": "Invalid latitude or longitude data."}, status=status.HTTP_400_BAD_REQUEST)
 
